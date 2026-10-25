@@ -3,3 +3,5 @@ numpy
 matplotlib
 networkx
 pm4py
+streamlit
+plotly
