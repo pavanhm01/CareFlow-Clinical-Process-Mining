@@ -456,3 +456,134 @@ st.download_button(
 
 st.markdown("---")
 st.caption("CareFlow Clinical Pathway Process Mining • Educational prototype • All records are simulated.")
+# ============================================================
+# WEEK 3: PROCESS PERFORMANCE ANALYSIS
+# ============================================================
+
+st.markdown("---")
+st.header("⏱️ Process Performance Analysis")
+
+try:
+    from src.performance_analysis import (
+        load_event_log,
+        calculate_patient_journey,
+        calculate_activity_timing,
+        calculate_activity_frequency,
+    )
+
+    performance_df = load_event_log()
+
+    patient_journey = calculate_patient_journey(performance_df)
+
+    transitions, transition_summary = calculate_activity_timing(
+        performance_df
+    )
+
+    activity_frequency = calculate_activity_frequency(performance_df)
+
+    st.caption(
+        "Analysis uses simulated hospital event data. "
+        "Elapsed time represents the interval between recorded events."
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric(
+        "Patients Analysed",
+        f"{patient_journey['Case_ID'].nunique():,}"
+    )
+
+    col2.metric(
+        "Average Journey Duration",
+        f"{patient_journey['Journey_Duration_Hours'].mean():.2f} hrs"
+    )
+
+    col3.metric(
+        "Longest Journey",
+        f"{patient_journey['Journey_Duration_Hours'].max():.2f} hrs"
+    )
+
+    st.subheader("Patient Journey Duration")
+
+    journey_fig = px.histogram(
+        patient_journey,
+        x="Journey_Duration_Hours",
+        nbins=15,
+        title="Distribution of Recorded Patient Journey Durations",
+        labels={
+            "Journey_Duration_Hours": "Duration (hours)"
+        },
+    )
+
+    st.plotly_chart(journey_fig, width="stretch")
+
+    st.subheader("Average Time Between Activities")
+
+    if not transition_summary.empty:
+        transition_summary = transition_summary.copy()
+
+        transition_summary["Transition"] = (
+            transition_summary["Previous_Activity"]
+            + " → "
+            + transition_summary["Activity_Name"]
+        )
+
+        transition_fig = px.bar(
+            transition_summary.sort_values(
+                "Average_Elapsed_Hours"
+            ),
+            x="Average_Elapsed_Hours",
+            y="Transition",
+            orientation="h",
+            title="Average Elapsed Time Between Consecutive Activities",
+            labels={
+                "Average_Elapsed_Hours": "Average elapsed time (hours)",
+                "Transition": "Activity transition",
+            },
+        )
+
+        st.plotly_chart(transition_fig, width="stretch")
+
+        st.subheader("Transition Performance Details")
+
+        st.dataframe(
+            transition_summary[
+                [
+                    "Previous_Activity",
+                    "Activity_Name",
+                    "Transition_Count",
+                    "Average_Elapsed_Hours",
+                    "Median_Elapsed_Hours",
+                    "Maximum_Elapsed_Hours",
+                ]
+            ].round(2),
+            width="stretch",
+            hide_index=True,
+        )
+
+    st.subheader("Activity Frequency")
+
+    activity_fig = px.bar(
+        activity_frequency.sort_values("Event_Count"),
+        x="Event_Count",
+        y="Activity_Name",
+        orientation="h",
+        title="Recorded Events by Activity",
+        labels={
+            "Event_Count": "Number of events",
+            "Activity_Name": "Hospital activity",
+        },
+    )
+
+    st.plotly_chart(activity_fig, width="stretch")
+
+    st.subheader("Patient Journey Details")
+
+    st.dataframe(
+        patient_journey.round(2),
+        width="stretch",
+        hide_index=True,
+    )
+
+except Exception as error:
+    st.error(f"Unable to load process performance analysis: {error}")
