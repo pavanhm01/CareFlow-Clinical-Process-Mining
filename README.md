@@ -89,3 +89,89 @@ This is an educational prototype using simulated hospital data. Its results do n
 * Measure activity durations and waiting times.
 * Identify bottlenecks and frequent workflow loops.
 * Improve process visualization and reporting.
+
+
+
+
+## Week 3 – Day 1: Process Performance Analysis
+
+### Overview
+
+Analyzed the CareFlow clinical event log to understand patient activity patterns, journey durations, and transition performance using process mining techniques.
+
+### Features
+
+* **Activity Frequency Analysis:** Analyzes how frequently each clinical activity occurs.
+* **Patient Journey Analysis:** Examines patient pathways and total journey durations.
+* **Transition Time Analysis:** Calculates elapsed time between consecutive activities.
+* **Performance Summary:** Generates statistical summaries of activity transitions.
+* **CSV Reports:** Exports activity frequency, transition times, patient journeys, and transition performance summaries.
+* **Dashboard Integration:** Presents process performance information through interactive visualizations.
+
+### Output Files
+
+* `outputs/activity_frequency_analysis.csv`
+* `outputs/activity_transition_times.csv`
+* `outputs/patient_journey_analysis.csv`
+* `outputs/transition_performance_summary.csv`
+
+### Dataset Summary
+
+* **Total Events:** 750
+* **Total Patients:** 100
+* **Unique Activities:** 7
+
+*Note: These results are generated using simulated patient activity data and do not represent verified hospital performance measurements.*
+
+
+
+
+## Week 3 – Day 2: Process Bottleneck Detection
+
+### Overview
+
+The CareFlow Clinical Process Mining project analyzes patient activity pathways to identify transitions that may contribute to delays in hospital workflows.
+
+### Features
+
+* **Transition Time Analysis:** Calculates elapsed time between consecutive patient activities.
+* **Bottleneck Detection:** Identifies transitions with higher average elapsed times.
+* **Performance Summary:** Reports average, median, and maximum transition times.
+* **Visual Analytics:** Displays activity frequency, patient journey duration, and transition performance.
+* **Patient Journey Analysis:** Examines the sequence of activities followed by patients.
+* **Interactive Dashboard:** Uses Streamlit and Plotly to explore process performance.
+* **Data Export:** Supports downloading analysis results for further examination.
+
+### Technologies Used
+
+* Python
+* Pandas and NumPy
+* PM4Py
+* Streamlit
+* Plotly
+* Matplotlib
+* NetworkX
+
+### How to Run
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the process mining pipeline:
+
+```bash
+python main.py
+```
+
+Launch the dashboard:
+
+```bash
+python -m streamlit run dashboard.py
+```
+
+### Note
+
+The current dataset contains simulated patient activity events. Bottleneck results are exploratory and should not be interpreted as verified clinical performance measurements.
